@@ -32,6 +32,18 @@ A port of ems-qart (github.com/rbino/ems-qart).
 - Text cells over the pixel layer are opaque: label plates are filled as text cells in the art's plate
   colour (`stage.plateRgb`) so text and art agree.
 
+## macOS builds and the release
+
+- libusb is compiled in on macOS (`build.zig` → `linkBundledLibusb`, libusb's own `Xcode/config.h`);
+  Linux links the system one through pkg-config.
+- `tools/release-macos.sh` builds aarch64 + x86_64 for macOS 13.0, lipos, ad-hoc signs, tars
+  `qartz-macos-universal.tar.gz` (versionless name: the README's `releases/latest/download` link).
+- **The macOS 26 SDK's .tbd stubs are arm64e-only**; Zig 0.15 can't link plain arm64 against them
+  (undefined CF symbols). Cross builds take `-Dmacos-sdk=` a 15.x SDK; the script picks it.
+- **Header padding**: `exe.headerpad_max_install_names` — without it `codesign` writes its load command
+  over the start of x86_64 `__text` (SIGSEGV in libusb on the first USB scan, only once signed).
+- Test both slices against the cart (read-only): `arch -arm64 qartz info`, `arch -x86_64 qartz info`.
+
 ## Verify
 
 - `zig build test` — protocol, header, fuzzy filter, motion.

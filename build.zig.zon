@@ -10,6 +10,10 @@
             .url = "https://github.com/M64GitHub/movy/archive/refs/tags/v0.3.1.tar.gz",
             .hash = "movy-0.3.1-UtRV61KlDgCcAPuKtHhTsOXuNPwlQDGr-bXkq9JDkVRB",
         },
+        .libusb = .{
+            .url = "https://github.com/libusb/libusb/archive/refs/tags/v1.0.30.tar.gz",
+            .hash = "N-V-__8AAPiYHABnv0glu6zoTGkhikaLpjx-2pBKdChsqtW4",
+        },
     },
     .paths = .{ "build.zig", "build.zig.zon", "src" },
 }

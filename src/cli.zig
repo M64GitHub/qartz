@@ -20,6 +20,7 @@ pub const USAGE =
     \\  qartz backup <dir>                 both banks + SRAM into <dir>
     \\
     \\options:
+    \\  -V, --version        print the version
     \\  --no-verify          skip the read-back after a write
     \\  --fake <dir>         use a fake cart kept in <dir> (no hardware)
     \\  --fake-speed <x>     fake cart pace, 1 = real, 0 = instant (default 1)

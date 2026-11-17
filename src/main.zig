@@ -12,6 +12,7 @@ const fake = @import("cart/fake.zig");
 const app = @import("app/app.zig");
 const term = @import("app/term.zig");
 const signals = @import("signals.zig");
+const build_options = @import("build_options");
 
 /// zig `defer`s don't run on @panic: restore the terminal first, or a
 /// crash strands the shell in raw mode on the alternate screen.
@@ -86,6 +87,9 @@ pub fn main() !u8 {
             opts.keys = args[i];
         } else if (std.mem.eql(u8, a, "--motion")) {
             opts.motion_on = true;
+        } else if (std.mem.eql(u8, a, "-V") or std.mem.eql(u8, a, "--version")) {
+            std.fs.File.stdout().writeAll("qartz " ++ build_options.version ++ "\n") catch {};
+            return 0;
         } else if (std.mem.eql(u8, a, "-h") or std.mem.eql(u8, a, "--help")) {
             std.debug.print("{s}", .{cli.USAGE});
             return 0;
