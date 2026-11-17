@@ -9,7 +9,7 @@ port of [ems-qart](https://github.com/rbino/ems-qart): a 60 fps neon pixel-art T
 - The cart is picked up **automatically** when plugged in (hubs are fine) — no "refresh" button
 - Transfers can be cancelled; a write's cancel asks twice, since it leaves the bank half-flashed
 - USB transfers have timeouts — a pulled cable fails the job instead of hanging the app
-- Fuzzy file picker with favorites (from [DUET](https://github.com/M64GitHub)), 11 colour themes (`t`), DMG green by default
+- Fuzzy file picker with favorites (from DUET), 11 colour themes (`t`), DMG green by default
 
 ## Build
 
