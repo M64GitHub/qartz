@@ -11,6 +11,7 @@ const usb = @import("cart/usb.zig");
 const fake = @import("cart/fake.zig");
 const app = @import("app/app.zig");
 const term = @import("app/term.zig");
+const signals = @import("signals.zig");
 
 /// zig `defer`s don't run on @panic: restore the terminal first, or a
 /// crash strands the shell in raw mode on the alternate screen.
@@ -25,6 +26,8 @@ pub fn main() !u8 {
     var gpa: std.heap.DebugAllocator(.{}) = .init;
     defer _ = gpa.deinit();
     const allocator = gpa.allocator();
+
+    signals.install();
 
     const args = try std.process.argsAlloc(allocator);
     defer std.process.argsFree(allocator, args);

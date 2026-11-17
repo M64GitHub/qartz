@@ -22,6 +22,7 @@ const config = @import("config.zig");
 const worker = @import("../cart/worker.zig");
 const proto = @import("../cart/protocol.zig");
 const rom = @import("../cart/rom.zig");
+const signals = @import("../signals.zig");
 
 const State = state_mod.State;
 const Slot = state_mod.Slot;
@@ -92,6 +93,9 @@ pub fn run(allocator: std.mem.Allocator, w: *worker.Worker, opts: Options) !u8 {
     var next_deadline: i128 = std.time.nanoTimestamp();
     var ctx: Ctx = .{ .allocator = allocator, .st = &st, .w = w, .s = undefined, .dlg = &dlg, .cfg = &cfg };
     while (!ctx.quit) {
+        // the window closed (SIGHUP) or someone asked us to stop: leave
+        // through the front door so the worker finishes its block
+        if (signals.requested()) break;
         next_deadline += FRAME_NS;
         var s = w.snapshot();
         ctx.s = &s;
@@ -130,7 +134,10 @@ pub fn run(allocator: std.mem.Allocator, w: *worker.Worker, opts: Options) !u8 {
         view.draw(&canvas, .{ .lay = &lay, .st = &st, .s = &s, .dlg = &dlg, .cfg = &cfg });
 
         if (term) |*t| {
-            try t.present(allocator, &canvas, frame, &st);
+            t.present(allocator, &canvas, frame, &st) catch |e| {
+                if (signals.requested()) break; // the terminal is gone
+                return e;
+            };
         } else if (st.frame_no + 1 >= opts.frames) {
             if (opts.dump) {
                 const txt = try canvas.dumpAlloc(allocator);

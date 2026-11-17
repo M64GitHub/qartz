@@ -117,7 +117,9 @@ fn header(c: *TextCanvas, v: View) void {
         c.putStr(x, 0, v.s.device_label, theme.accent_pink, theme.header_bg);
         x -= 3;
     }
-    const chip: struct { dot: u21, col: Rgb, word: []const u8 } = if (!v.s.connected)
+    const chip: struct { dot: u21, col: Rgb, word: []const u8 } = if (!v.s.connected and v.s.conn_err.len > 0)
+        .{ .dot = '\u{25CF}', .col = theme.mute_red, .word = "CART NOT ANSWERING" }
+    else if (!v.s.connected)
         .{ .dot = '\u{25CB}', .col = theme.mute_red, .word = "NO CART" }
     else if (v.s.busy)
         .{ .dot = '\u{25CF}', .col = if (v.st.blink_on) theme.accent_hot else theme.accent, .word = "WORKING" }

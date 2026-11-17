@@ -6,6 +6,7 @@ const proto = @import("cart/protocol.zig");
 const rom = @import("cart/rom.zig");
 const worker_mod = @import("cart/worker.zig");
 const Worker = worker_mod.Worker;
+const signals = @import("signals.zig");
 
 pub const USAGE =
     \\qartz — EMS 64M USB Game Boy cart flasher
@@ -86,7 +87,10 @@ pub fn run(w: *Worker, pos: []const []const u8, verify: bool) u8 {
 /// hub a moment.
 fn waitConnected(w: *Worker) bool {
     var waited: u32 = 0;
-    while (waited < 3000) : (waited += 50) {
+    // one header read may have to time out (5 s) before a deaf cart is
+    // reported as such
+    while (waited < 8000) : (waited += 50) {
+        if (signals.requested()) return false;
         const s = w.snapshot();
         if (s.connected) return true;
         if (s.conn_err.len > 0) {
@@ -135,8 +139,17 @@ fn follow(w: *Worker) u8 {
     var seen = w.snapshot().finished;
     // the job is queued; wait for it to finish, drawing as it goes
     var last_draw: i128 = 0;
+    var stopping = false;
     while (true) {
         const s = w.snapshot();
+        // Ctrl+C: never abandon the cart mid-block — cancel, then wait for
+        // the worker to finish the block it is on
+        if (signals.requested() and !stopping) {
+            stopping = true;
+            w.cancel();
+            if (tty) std.debug.print("\r\x1b[2K", .{});
+            std.debug.print("stopping after the current block...\n", .{});
+        }
         if (s.finished != seen and !s.busy) {
             seen = s.finished;
             if (tty) std.debug.print("\r\x1b[2K", .{});

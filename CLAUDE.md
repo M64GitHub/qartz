@@ -1,7 +1,7 @@
 # qartz — notes for Claude
 
 Zig 0.15.2 + movy (v0.3.1, pinned in build.zig.zon) TUI and CLI for EMS 64M USB Game Boy carts.
-A port of ems-qart (`~/chiptune/build/ems-qart`, Qt 6 build in `/Applications/ems-qart.app`).
+A port of ems-qart (github.com/rbino/ems-qart).
 
 ## Layout
 
@@ -11,7 +11,7 @@ A port of ems-qart (`~/chiptune/build/ems-qart`, Qt 6 build in `/Applications/em
 - `src/cli.zig` — `info|read|write|backup` over the worker.
 - `src/app/` — the TUI. `app.zig` (60 fps loop, keys, actions, headless), `ui/stage.zig` (pixel layer:
   layout, carts, bus, packets, logotype), `ui/view.zig` (text layer + overlays), `ui/state.zig`.
-- LIFTED FROM DUET (`~/m64/space_64/duetracker/src/app/`): `term.zig`, `event.zig`, `config.zig`,
+- LIFTED FROM DUET (its `src/app/`): `term.zig`, `event.zig`, `config.zig`,
   `ui/canvas.zig`, `ui/widgets.zig`, `ui/theme.zig` (+ the DMG scheme, ours), `ui/motion.zig`,
   `ui/filedialog.zig` (audition + file-mode narrowing removed). Prefer fixing upstream-style; keep
   them recognisable so DUET fixes can be carried over.
@@ -20,6 +20,9 @@ A port of ems-qart (`~/chiptune/build/ems-qart`, Qt 6 build in `/Applications/em
 
 - **Never write to the real cart in a test** unless the user asks — it holds their LSDj banks and songs.
   Reads are safe. Exercise writes on `--fake <dir>`.
+- **Never SIGKILL qartz during a real transfer.** A cart abandoned mid-block hangs until it is
+  unplugged (it then ignores even control requests). `signals.zig` makes SIGHUP/SIGTERM/SIGINT finish
+  the block in flight; a test that needs to stop qartz closes the window or sends one of those.
 - Tests and screenshots set `QARTZ_CONFIG=<scratch file>` so they never touch `~/.config/qartz/`.
 - `TextCanvas.putStr` and `widgets.frame` titles are ASCII-only; anything with `·`/`▸`/`—` goes through
   `view.text()`.

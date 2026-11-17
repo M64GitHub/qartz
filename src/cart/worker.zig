@@ -230,7 +230,15 @@ pub const Worker = struct {
             }
             return;
         };
-        const banks = self.readHeaders();
+        const banks = self.readHeaders() catch |err| {
+            // on the bus, opened, but deaf: the firmware is stuck (a host
+            // that died mid-transfer does this). Only power clears it.
+            self.dev.close();
+            self.mutex.lock();
+            defer self.mutex.unlock();
+            self.status.conn_err.set("cart found but not answering ({s}) \u{2014} unplug it for a few seconds", .{@errorName(err)});
+            return;
+        };
         self.mutex.lock();
         defer self.mutex.unlock();
         self.status.connected = true;
@@ -246,11 +254,13 @@ pub const Worker = struct {
         self.status.banks = .{ null, null };
     }
 
-    fn readHeaders(self: *Worker) [2]?rom.Header {
+    /// Both banks' headers. A failed read fails the lot: a cart that
+    /// cannot answer 512 bytes is not one to report as connected.
+    fn readHeaders(self: *Worker) usb.Error![2]?rom.Header {
         var out: [2]?rom.Header = .{ null, null };
         for (0..proto.BANKS) |i| {
             var buf: [512]u8 = undefined;
-            self.dev.read(.rom, proto.bankBase(@intCast(i + 1)), &buf) catch continue;
+            try self.dev.read(.rom, proto.bankBase(@intCast(i + 1)), &buf);
             out[i] = rom.parse(&buf);
         }
         return out;
@@ -322,7 +332,7 @@ pub const Worker = struct {
         }
         // a write changed what the banks hold
         const banks: ?[2]?rom.Header = if (req.kind == .write and req.mem == .rom and self.dev.isOpen())
-            self.readHeaders()
+            self.readHeaders() catch null
         else
             null;
 
