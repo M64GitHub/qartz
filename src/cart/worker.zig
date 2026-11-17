@@ -308,6 +308,13 @@ pub const Worker = struct {
         };
         if (result) |_| {} else |err| {
             describe(err, &msg, &detail);
+            // an aborted write leaves a partial image behind: say where
+            if (req.kind == .write and err != error.FileTooBig and err != error.EmptyFile and err != error.FileError) {
+                if (req.mem == .rom)
+                    detail.set("bank {d} now holds a partial write \u{2014} flash it again", .{req.bank})
+                else
+                    detail.set("the SRAM now holds a partial write \u{2014} write it again", .{});
+            }
             switch (err) {
                 error.Disconnected, error.Timeout, error.Io, error.Short => self.disconnect(),
                 else => {},

@@ -2,7 +2,9 @@ const std = @import("std");
 
 pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
-    const optimize = b.standardOptimizeOption(.{ .preferred_optimize_mode = .ReleaseFast });
+    // ReleaseFast by default: a 60 fps glow compositor wants it, and the
+    // tests are the safety net (`zig build test -Doptimize=Debug`)
+    const optimize = b.option(std.builtin.OptimizeMode, "optimize", "optimization mode (default: ReleaseFast)") orelse .ReleaseFast;
 
     const dep_movy = b.dependency("movy", .{ .target = target, .optimize = optimize });
     const mod_movy = dep_movy.module("movy");

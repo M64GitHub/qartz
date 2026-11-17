@@ -8,9 +8,8 @@
 //! bulk IN endpoint; a write carries its data right behind the command
 //! in the same OUT transfer.
 //!
-//! The cart holds two independent 4 MB flash banks (a ROM per bank,
-//! selected by the cart's reset trick on the Game Boy) and one 128 KB
-//! SRAM shared by both.
+//! The cart holds two independent 4 MB flash banks (a ROM per bank) and
+//! one 128 KB SRAM shared by both.
 
 const std = @import("std");
 

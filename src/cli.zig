@@ -22,6 +22,12 @@ pub const USAGE =
     \\  --no-verify          skip the read-back after a write
     \\  --fake <dir>         use a fake cart kept in <dir> (no hardware)
     \\  --fake-speed <x>     fake cart pace, 1 = real, 0 = instant (default 1)
+    \\  --scheme <name>      colour theme (t cycles them in the app; DMG default)
+    \\
+    \\headless (for tests and screenshots):
+    \\  --dump-screen        print the text layer after --frames frames
+    \\  --shot <file.png>    save the pixel layer after --frames frames
+    \\  --frames <n>  --size <cols>x<rows>  --keys "30:w,60:enter"  --motion
     \\
 ;
 
