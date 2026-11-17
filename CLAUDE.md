@@ -44,3 +44,7 @@ A port of ems-qart (github.com/rbino/ems-qart).
   path is too long for a socket) and use `kitty @ send-text '?'` for typed characters, `send-key
   right` / `escape` / `enter` for named keys (send-key can't synthesize shifted text in plain mode).
 - Hardware: `qartz info`, `qartz read rom 1 x.gb` (the global checksum line must say OK).
+- Demo video (the X post): a fake cart (`--fake DIR --fake-speed 6 --fake-label "EMS 64M"`) with the
+  `unplugged` marker renamed away ~2 s in, the whole story scripted with `--keys`, kitty started via
+  `sh -c "sleep 2; exec qartz ..."` so the boot scroll is on tape, `screencapture -v -V <s> -R<window
+  rect>` (60 fps, Retina), then ffmpeg: trim, the flash's middle at 2x, scale 1080 wide, fades, H.264.

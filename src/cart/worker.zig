@@ -177,7 +177,16 @@ pub const Worker = struct {
         defer self.mutex.unlock();
         if (self.status.busy or self.pending != null) return false;
         self.pending = req;
-        self.status.busy = true; // busy from the moment it is queued
+        // busy from the moment it is queued — and showing THIS job, not
+        // the last one, until the worker thread picks it up
+        self.status.busy = true;
+        self.status.job = req;
+        self.status.phase = .idle;
+        self.status.step = 0;
+        self.status.steps = 0;
+        self.status.done = 0;
+        self.status.total = 0;
+        self.status.started_ns = std.time.nanoTimestamp();
         self.cancel_flag.store(false, .release);
         self.cond.signal();
         return true;

@@ -23,6 +23,7 @@ pub const USAGE =
     \\  --no-verify          skip the read-back after a write
     \\  --fake <dir>         use a fake cart kept in <dir> (no hardware)
     \\  --fake-speed <x>     fake cart pace, 1 = real, 0 = instant (default 1)
+    \\  --fake-label <name>  what the header calls the fake cart (demos)
     \\  --scheme <name>      colour theme (t cycles them in the app; DMG default)
     \\
     \\headless (for tests and screenshots):

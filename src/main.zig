@@ -34,6 +34,7 @@ pub fn main() !u8 {
 
     var fake_dir: ?[]const u8 = null;
     var fake_speed: f32 = 1.0;
+    var fake_label: ?[]const u8 = null;
     var verify = true;
     var opts: app.Options = .{};
     var pos: std.ArrayList([]const u8) = .empty;
@@ -50,6 +51,11 @@ pub fn main() !u8 {
             i += 1;
             if (i >= args.len) return usage("--fake-speed needs a number");
             fake_speed = std.fmt.parseFloat(f32, args[i]) catch return usage("--fake-speed needs a number");
+        } else if (std.mem.eql(u8, a, "--fake-label")) {
+            // demos and screenshots: what the header calls the fake cart
+            i += 1;
+            if (i >= args.len) return usage("--fake-label needs a name");
+            fake_label = args[i];
         } else if (std.mem.eql(u8, a, "--no-verify")) {
             verify = false;
         } else if (std.mem.eql(u8, a, "--scheme")) {
@@ -103,6 +109,7 @@ pub fn main() !u8 {
         } };
 
     var w = worker_mod.Worker.init(allocator, dev);
+    if (fake_label) |l| w.status.device_label = l;
     try w.start();
     defer w.deinit();
 
