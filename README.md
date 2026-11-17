@@ -103,3 +103,7 @@ The USB protocol comes from [ems-qart](https://github.com/rbino/ems-qart) by Ric
 from [ems-flasher](http://lacklustre.net/projects/ems-flasher/) by Mike Ryan. The file dialog, form kit, text
 canvas, themes and terminal presenter come from DUET, a tracker built on movy; the pixel/glow core is
 movy's `Frame`.
+
+## License
+
+GPL-3.0-or-later, like ems-qart, whose protocol code it ports. See [LICENSE](LICENSE).
