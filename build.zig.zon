@@ -1,0 +1,15 @@
+.{
+    .name = .qartz,
+    .version = "0.1.0",
+    .fingerprint = 0x2dfc36ea67ca8374,
+    .minimum_zig_version = "0.15.2",
+    .dependencies = .{
+        // movy, the terminal render engine (M64GitHub/movy), the same
+        // release DUET pins — the UI kit lifted from DUET builds on it
+        .movy = .{
+            .url = "https://github.com/M64GitHub/movy/archive/refs/tags/v0.3.1.tar.gz",
+            .hash = "movy-0.3.1-UtRV61KlDgCcAPuKtHhTsOXuNPwlQDGr-bXkq9JDkVRB",
+        },
+    },
+    .paths = .{ "build.zig", "build.zig.zon", "src" },
+}
