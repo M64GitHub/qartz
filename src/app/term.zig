@@ -107,10 +107,12 @@ pub const TermFrontend = struct {
         // movy's raw mode enables all-motion mouse reporting; we don't want the flood
         _ = std.posix.write(std.posix.STDOUT_FILENO, "\x1b[?1003l\x1b[?1006l\x1b[?1000l") catch 0;
 
-        // kitty keyboard protocol (real press/repeat/release) — inside alt screen
-        const kitty = movy.input.detectKittyKeyboard(200);
-        if (kitty) movy.input.enableKittyKeyboard();
-        errdefer if (kitty) movy.input.disableKittyKeyboard();
+        // NO kitty keyboard protocol in qartz (DUET turns it on for real key
+        // releases, which a flasher has no use for). Under it, kitty reports
+        // a shifted key as its BASE key + a shift flag — `?` arrives as `/`,
+        // `T` as `t`, and a typed file name loses its capitals. Plain input
+        // delivers what the keyboard layout actually types, on any layout.
+        const kitty = false;
 
         var screen = try movy.Screen.init(allocator, cols, rows);
         errdefer screen.deinit(allocator);

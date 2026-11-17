@@ -23,6 +23,9 @@ A port of ems-qart (`~/chiptune/build/ems-qart`, Qt 6 build in `/Applications/em
 - Tests and screenshots set `QARTZ_CONFIG=<scratch file>` so they never touch `~/.config/qartz/`.
 - `TextCanvas.putStr` and `widgets.frame` titles are ASCII-only; anything with `·`/`▸`/`—` goes through
   `view.text()`.
+- **No kitty keyboard protocol** (term.zig). Under it kitty sends a shifted key as base key + shift
+  flag (`?` → `/`), which broke `?`, `T` and capitals in file names. Plain input types what the
+  keyboard layout types, on any layout.
 - Text cells over the pixel layer are opaque: label plates are filled as text cells in the art's plate
   colour (`stage.plateRgb`) so text and art agree.
 
@@ -33,4 +36,8 @@ A port of ems-qart (`~/chiptune/build/ems-qart`, Qt 6 build in `/Applications/em
 - `qartz --fake DIR --shot out.png --frames N [--motion]` — pixel layer only.
 - Real look (text + pixels): run it in a new kitty window and `screencapture -l <window id>` (the
   terminal has Screen Recording permission). AeroSpace tiles the window, so sizes vary.
+- `--keys` injects keys AFTER the terminal, so it cannot catch input-encoding bugs. For real keys,
+  start kitty with `-o allow_remote_control=yes --listen-on unix:${TMPDIR}qz.sock` (the scratchpad
+  path is too long for a socket) and use `kitty @ send-text '?'` for typed characters, `send-key
+  right` / `escape` / `enter` for named keys (send-key can't synthesize shifted text in plain mode).
 - Hardware: `qartz info`, `qartz read rom 1 x.gb` (the global checksum line must say OK).
