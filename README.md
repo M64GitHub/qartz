@@ -1,6 +1,6 @@
 # qartz
 
-**Flash EMS 64M USB Game Boy carts from the terminal** — a 60 fps neon pixel-art TUI and a scriptable CLI,
+**Flash EMS 64M USB Game Boy carts from the terminal** - a 60 fps neon pixel-art TUI and a scriptable CLI,
 written in Zig on the [movy](https://github.com/M64GitHub/movy) terminal engine. A from-scratch port of
 [ems-qart](https://github.com/rbino/ems-qart).
 
@@ -11,7 +11,7 @@ written in Zig on the [movy](https://github.com/M64GitHub/movy) terminal engine.
 
 ## What it does
 
-- **Three slots — BANK 1, BANK 2, SRAM.** Read any of them into a file, write a file into any of them.
+- **Three slots - BANK 1, BANK 2, SRAM.** Read any of them into a file, write a file into any of them.
   The labels show what the cart really holds: title, size, mapper, GBC flag, RAM.
 - **Every write is verified** by reading it all back; every ROM read is checked against the ROM's own
   global checksum.
