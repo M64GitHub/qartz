@@ -102,7 +102,7 @@ qartz --fake /tmp/cart --shot out.png --frames 60 --motion
 
 ## Troubleshooting
 
-**"cart found but not answering"** — the cart's firmware hangs if a host dies in the middle of a transfer
+**"cart found but not answering"** - the cart's firmware hangs if a host dies in the middle of a transfer
 (a killed process, a crash). It then ignores even basic USB requests until it loses power: unplug the
 cart itself for a few seconds. qartz never leaves it that way on a normal quit, `esc`, Ctrl+C or a closed
 window.
